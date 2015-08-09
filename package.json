@@ -1,43 +1,45 @@
 {
-    "name": "cmdline",
-    "rawName": "cmdline",
-    "version": "0.0.2",
-    "description": "cmdline is a process.argv parser",
-    "main": "./lib/cmdline.js",
-    "scripts": {
-        "test": "echo \"There is no test\" && exit 1"
-    },
-    "keywords": [
-        "cmdline",
-        "cmd",
-        "process",
-        "argv",
-        "args"
-    ],
-    "author": {
-        "name": "Houfeng",
-        "email": "admin@xhou.net"
-    },
-    "homepage": "http://houfeng.net/cmdline",
-    "bugs": {
-        "url": "https://github.com/Houfeng/cmdline/issues",
-        "email": "admin@xhou.net"
-    },
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Houfeng/cmdline.git"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "del": "^1.2.0",
-        "gulp": "^3.9.0",
-        "gulp-concat": "^2.6.0",
-        "gulp-header": "^1.2.2",
-        "gulp-jshint": "^1.11.2",
-        "gulp-uglify": "^1.2.0",
-        "gulp-rename": "^1.2.2",
-        "gulp-replace": "^0.5.3",
-        "gulp-util": "^3.0.6"
-    }
+  "name": "cmdline",
+  "rawName": "cmdline",
+  "version": "0.0.4",
+  "description": "cmdline is a process.argv parser",
+  "main": "./lib/cmdline.js",
+  "scripts": {
+    "test": "echo \"There is no test\" && exit 1"
+  },
+  "keywords": [
+    "cmdline",
+    "cmd",
+    "process",
+    "argv",
+    "args"
+  ],
+  "author": {
+    "name": "Houfeng",
+    "email": "admin@xhou.net"
+  },
+  "homepage": "http://houfeng.net/cmdline",
+  "bugs": {
+    "url": "https://github.com/Houfeng/cmdline/issues",
+    "email": "admin@xhou.net"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Houfeng/cmdline.git"
+  },
+  "dependencies": {
+    "real-utils": "0.0.1"
+  },
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-header": "^1.2.2",
+    "gulp-jshint": "^1.11.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.3",
+    "gulp-util": "^3.0.6"
+  }
 }
