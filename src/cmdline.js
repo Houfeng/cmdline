@@ -39,13 +39,11 @@ CommandLine.prototype.initExtendMethods = function() {
     var self = this;
     //控制参数处理
     self.options.has = function(name) {
-        for (var i = 0; i < self.options.length; i++) {
-            var item = self.options[i];
+        return self.options.some(function(item) {
             if (item == name || item.split('=')[0] == name) {
                 return true;
             }
-        }
-        return false;
+        });
     };
     self.options.getValue = function(name) {
         for (var i = 0; i < self.options.length; i++) {
@@ -58,7 +56,7 @@ CommandLine.prototype.initExtendMethods = function() {
     };
     self.options.setValue = function(name, value) {
         if (self.options.has(name)) {
-            var oldOptions = self.options;
+            var oldOptions = utils.clone(self.options);
             self.options.splice(0, self.options.length);
             for (var i = 0; i < oldOptions.length; i++) {
                 var item = oldOptions[i];
@@ -70,14 +68,9 @@ CommandLine.prototype.initExtendMethods = function() {
         self.options.push(name + "=" + value);
     };
     self.options.getNodeOptions = function() {
-        var nodeOptions = [];
         var regExp = new RegExp("^--");
-        for (var i = 0; i < self.options.length; i++) {
-            var item = self.options[i];
-            if (regExp.test(item)) {
-                nodeOptions.push(item);
-            };
-        }
-        return nodeOptions;
+        return self.options.filter(function(item) {
+            return regExp.test(item);
+        });
     };
 };
