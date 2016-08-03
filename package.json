@@ -1,9 +1,9 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "cmdline is a process.argv parser",
-  "main": "./lib/cmdline.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"There is no test\" && exit 1"
   },
@@ -12,7 +12,10 @@
     "cmd",
     "process",
     "argv",
-    "args"
+    "args",
+    "commander",
+    "command",
+    "yargv"
   ],
   "author": {
     "name": "Houfeng",
@@ -29,17 +32,11 @@
     "url": "https://github.com/Houfeng/cmdline.git"
   },
   "dependencies": {
+    "cify": "^1.0.0",
     "real-utils": "0.0.1"
   },
   "devDependencies": {
-    "del": "^1.2.0",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-header": "^1.2.2",
-    "gulp-jshint": "^1.11.2",
-    "gulp-uglify": "^1.2.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.5.3",
-    "gulp-util": "^3.0.6"
+    "istanbul": "^0.4.4",
+    "mocha": "^3.0.0"
   }
 }
