@@ -6,11 +6,11 @@ const pkg = require('../package.json');
 cmdline
   .version(pkg.version)
   .help('info')
-  .option('-t', { type: 'switch' })
+  .option('-t')
   .command('start', function (cmd, t) {
-    console.log('cmd:', cmd, t);
+    console.log('cmd:', t);
     //return false;
-  }, true)
+  }, false)
   .handle({ arguments: true }, function ($0, $1) {
     console.log('argv:', $0);
     //return false;
