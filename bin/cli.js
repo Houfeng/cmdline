@@ -14,7 +14,7 @@ cmdline
   .command('start', function (cmd, t) {
     console.log('cmd:', t);
     //return false;
-  }, false)
+  }, true)
   .handle({ arguments: true }, function ($0, $1) {
     console.log('argv:', $0);
     //return false;
