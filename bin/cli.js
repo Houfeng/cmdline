@@ -6,7 +6,7 @@ const pkg = require('../package.json');
 cmdline
   .version(pkg.version)
   .help('info')
-  .option('-t')
+  .option('-t', { type: 'switch' })
   .command('start', function (cmd, t) {
     console.log('cmd:', t);
     //return false;
@@ -15,7 +15,7 @@ cmdline
     console.log('argv:', $0);
     //return false;
   })
-  .handle(function (t) {
-    console.log('default:', t);
+  .handle(function ($0) {
+    console.log('default:', $0);
   })
   .ready();
