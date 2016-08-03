@@ -1,16 +1,19 @@
 const Parser = require('../').Parser;
 
-const parser = new Parser(["abv", "-t", "c a", "b"]);
+const parser = new Parser({
+  argv: ["abv", "-tx", "9", "c a", "b"]
+});
 
 parser
-  .error(function (err) {
-    console.log(err.message);
-  })
   .option(['-t', '--tab'], {
-    regexp: /./i
+    regexp: /[0-9]+/i,
+    default: 1
+  })
+  .handler(function (command) {
+    console.log('command1:', command);
   })
   .command(/./, function (command) {
-    console.log('command:', command);
+    console.log('command2:', command);
   })
   .ready();
 
