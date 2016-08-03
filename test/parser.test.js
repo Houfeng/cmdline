@@ -9,7 +9,7 @@ parser
     regexp: /[0-9]+/i,
     default: 1
   })
-  .handler(function (command) {
+  .handle(function (command) {
     console.log('command1:', command);
   })
   .command(/./, function (command) {

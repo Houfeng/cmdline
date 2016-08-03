@@ -6,13 +6,16 @@ const pkg = require('../package.json');
 cmdline
   .version(pkg.version)
   .help('info')
-  // .command('start', function (cmd, $0) {
-  //   console.log('cmd:', cmd, $0);
-  // }, true)
-  .handler({ arguments: true }, function ($0, $1) {
+  .option('-t', { type: 'switch' })
+  .command('start', function (cmd, t) {
+    console.log('cmd:', cmd, t);
+    //return false;
+  }, true)
+  .handle({ arguments: true }, function ($0, $1) {
     console.log('argv:', $0);
+    //return false;
   })
-  .handler(function () {
-    console.log('default:', 'test');
+  .handle(function (t) {
+    console.log('default:', t);
   })
   .ready();
