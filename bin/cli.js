@@ -21,5 +21,6 @@ cmdline
   })
   .handle(function ($0) {
     console.log('default:', $0);
+    console.log('has t:', this.has('t'));
   })
   .ready();
