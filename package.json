@@ -1,7 +1,7 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "cmdline is a process.argv parser",
   "main": "./lib/index.js",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "cify": "^1.0.0",
-    "ntils": "^1.0.1"
+    "ntils": "^1.0.2"
   },
   "devDependencies": {
     "istanbul": "^0.4.4",
