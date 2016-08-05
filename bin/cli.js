@@ -10,7 +10,7 @@ cmdline
     console.error('ERR:', err.message);
     process.exit(1);
   })
-  .option('-t', 'switch')
+  .option('-t', { command: '', type: 'switch' })
   .command('start', function (cmd, t) {
     console.log('cmd:', t);
     //return false;
