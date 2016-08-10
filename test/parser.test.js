@@ -1,21 +1,20 @@
-const Parser = require('../').Parser;
+const Command = require('../').Command;
 
-const parser = new Parser({
-  argv: ["abv", "-tx", "9", "c a", "b"]
-});
+const command = new Command();
 
-parser
-  .option(['-t', '--tab'], {
-    regexp: /[0-9]+/i,
-    default: 1
-  })
-  .handle(function (command) {
-    console.log('command1:', command);
-  })
-  .command(/./, function (command) {
-    console.log('command2:', command);
+command
+  .option(['-t', '--tab'], 'number')
+  .option(['-x'], 'number')
+  .action(function (command, $1) {
+    console.log('command:', command);
+  }, false)
+  .command(/[\S\s]*/)
+  .option(['-t', '--tab'], 'number')
+  .option(['-x'], 'number')
+  .action(function (cmd) {
+    console.log(cmd);
   })
   .ready();
 
-console.log('argv:', parser.argv);
-console.log('options:', parser.options);
+console.log('argv:', command.argv);
+console.log('options:', command.options);

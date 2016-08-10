@@ -7,20 +7,17 @@ cmdline
   .version(pkg.version)
   .help('info')
   .error(function (err) {
-    console.error('ERR:', err.message);
+    console.error(err.message);
     process.exit(1);
   })
-  .option('-t', { command: '', type: 'switch' })
-  .command('start', function (cmd, t) {
-    console.log('cmd:', t);
+  .option('-t', 'switch')
+  .command('start')
+  .root.action(function ($1, $2) {
+    console.log('argv:', $1);
     //return false;
-  }, true)
-  .handle({ arguments: true }, function ($0, $1) {
-    console.log('argv:', $0);
-    //return false;
-  })
-  .handle(function ($0) {
-    console.log('default:', $0);
+  }, false)
+  .action(function ($1) {
+    console.log('default:', $1);
     console.log('has t:', this.has('t'));
-  })
+  }, false)
   .ready();
