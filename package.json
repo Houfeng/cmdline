@@ -1,7 +1,7 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "1.1.7",
+  "version": "2.0.0",
   "description": "cmdline is a process.argv parser",
   "main": "./index.js",
   "scripts": {
@@ -35,8 +35,8 @@
     "url": "https://github.com/Houfeng/cmdline.git"
   },
   "dependencies": {
-    "cify": "^1.0.2",
-    "ntils": "^1.0.2"
+    "cify": "^2.1.0",
+    "ntils": "^2.0.2"
   },
   "devDependencies": {
     "istanbul": "^0.4.4",
