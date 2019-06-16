@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "rootDir": "./src/",
+    "sourceMap": false,
+    "declaration": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "maxNodeModuleJsDepth": 4,
+    "pretty": true,
+    "lib": [
+      "esnext"
+    ]
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

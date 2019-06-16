@@ -1,14 +1,16 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "2.0.4",
+  "version": "3.0.0",
   "description": "cmdline is a process.argv parser",
-  "main": "./index.js",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"There is no test\" && exit 1"
-  },
-  "bin": {
-    "cmdline": "./bin/cli.js"
+    "clean": "rm -rf ./dist/",
+    "lint": "tslint --project ./tsconfig.json --fix",
+    "build": "npm run clean && npm run lint && tsc && npm run copy",
+    "copy": "copyfiles --up 1 ./src/**/*.txt ./dist/",
+    "dev": "tsnd ./src/index.ts"
   },
   "keywords": [
     "cmdline",
@@ -35,11 +37,21 @@
     "url": "https://github.com/Houfeng/cmdline.git"
   },
   "dependencies": {
-    "cify": "^2.1.12",
-    "ntils": "^3.1.10"
+    "ntils": "^4.0.8"
   },
   "devDependencies": {
+    "@types/node": "^12.0.8",
     "istanbul": "^0.4.4",
-    "mocha": "^3.0.0"
+    "@types/copyfiles": "^2.1.1",
+    "@types/del": "^4.0.0",
+    "@types/mocha": "^5.2.7",
+    "copyfiles": "^2.1.0",
+    "debug": "^4.1.1",
+    "mocha": "^6.1.4",
+    "ts-node": "^8.3.0",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "tslint": "^5.16.0",
+    "tslint-config-dawn": "^1.0.2",
+    "typescript": "^3.5.2"
   }
 }
