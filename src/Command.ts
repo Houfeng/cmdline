@@ -126,16 +126,14 @@ export class Command {
 
   /**
    * 定义动作处理函数
-   * 第一个参数，
+   * @param handler 处理函数
    * - ActionHandler 的参数为 options 或 argv，执行时值将自动注入
-   * 第二个参数，可选三种情况
+   * @param required 匹配参数，如果指定必须满足才会执行 handler
    * - 传入 false：不要求匹配任何参数，当前命令无论任何 options 或 argv 都将执行
    * - 传入 Array：要求匹配 Array 指定的参数，只有匹配到了才执行
    * - 省略：将自动要求按 ActionHandler 的参数进行匹配
-   * 返回值，
-   * - 如果返回 false ，将会阻止后续其他匹配的 ActionHandler 执行
-   * @param handler 处理函数
-   * @param required 匹配参数，如果指定必须满足才会执行 handler
+   * @returns
+   * 如果返回 false ，将会阻止后续其他匹配的 ActionHandler 执行
    */
   public action(handler: ActionHandler, required?: ActionRequried) {
     this.actionList.push(new Action(handler, required));
