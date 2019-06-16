@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { Action, ActionHandler, ActionList, ActionRequried } from "./Action";
 import { Argument, ArgumentList } from "./Argument";
-import { isArray, isNull, isString } from "util";
+import { isArray, isString, isNullOrUndefined } from "util";
 import { Option, OptionList } from "./Option";
 import { Token, TokenList } from "./Token";
 import { Type } from "./Type";
@@ -126,6 +126,16 @@ export class Command {
 
   /**
    * 定义动作处理函数
+   * 第一个参数，
+   * - ActionHandler 的参数为 options 或 argv，执行时值将自动注入
+   * 第二个参数，可选三种情况
+   * - 传入 false：不要求匹配任何参数，当前命令无论任何 options 或 argv 都将执行
+   * - 传入 Array：要求匹配 Array 指定的参数，只有匹配到了才执行
+   * - 省略：将自动要求按 ActionHandler 的参数进行匹配
+   * 返回值，
+   * - 如果返回 false ，将会阻止后续其他匹配的 ActionHandler 执行
+   * @param handler 处理函数
+   * @param required 匹配参数，如果指定必须满足才会执行 handler
    */
   public action(handler: ActionHandler, required?: ActionRequried) {
     this.actionList.push(new Action(handler, required));
@@ -264,7 +274,7 @@ export class Command {
   private _parseCommand() {
     let subCommendName = this.originArgv[1];
     if (
-      isNull(subCommendName) ||
+      isNullOrUndefined(subCommendName) ||
       this.commandList.length < 1 ||
       Option.test(subCommendName)
     ) {
@@ -284,7 +294,7 @@ export class Command {
    * 是否包含重复字符
    */
   private _hasRepeatChar(str: string) {
-    if (isNull(str)) return false;
+    if (isNullOrUndefined(str)) return false;
     let array = str.split("");
     return unique(array).length !== array.length;
   }
@@ -299,18 +309,18 @@ export class Command {
     let len = this.tokenList.length;
     // 从 index=1 开始
     while (++index < len) {
-      let token = this.tokenList[index];
+      const token = this.tokenList[index];
       if (token.type === Token.TYPE_OPTION_NAME) {
         // 如果是一个 options
-        let option = this.optionList.get(token.value);
+        const option = this.optionList.get(token.value);
         // 如果「选项」不存在，或限定的 command 不匹配，添加到 errArray
-        if (isNull(option)) {
+        if (isNullOrUndefined(option)) {
           return new Error("Invalid option: " + token.value);
         }
         // 如果存在，则检查后边紧临的 token 是否符合「正则」这义的规则
-        let nextToken = this.tokenList[++index];
+        const nextToken = this.tokenList[++index];
         if (
-          isNull(nextToken) ||
+          isNullOrUndefined(nextToken) ||
           (nextToken.type === Token.TYPE_OPTION_NAME && !option.type.greed) ||
           !option.testValue(nextToken.value)
         ) {
@@ -398,7 +408,7 @@ export class Command {
    */
   private _findActions() {
     const foundActions = this.actionList.filter(action => {
-      let requiredParams = null;
+      let requiredParams: string[] = null;
       if (action.requiredParams === false) {
         // 没有任何必选参数
         requiredParams = [];
@@ -419,8 +429,8 @@ export class Command {
   /**
    * 在没有找到 handlers 时执行
    */
-  private _noMatch() {
-    if (this.helpHandler) return this.consoleInstance.log(this.helpHandler);
+  private _noMatch(): any {
+    if (this.helpHandler) return this.helpHandler();
     this.emitError(new Error("No processing"));
   }
 
@@ -428,7 +438,7 @@ export class Command {
    * 字符串或文件内容
    */
   private _strOrFile(str: string) {
-    if (isNull(str)) return str;
+    if (isNullOrUndefined(str)) return str;
     if (str[0] !== "@") return str;
     try {
       return fs.readFileSync(str.substr(1), "utf8");
@@ -449,7 +459,7 @@ export class Command {
         }
       : version;
     this.option(["-v", "--version"], "switch");
-    this.action(this.versionHandler, true);
+    this.action(this.versionHandler, ["version"]);
     return this;
   }
 
@@ -465,7 +475,7 @@ export class Command {
         }
       : help;
     this.option(["-h", "--help"], "switch");
-    this.action(this.helpHandler, true);
+    this.action(this.helpHandler, ["help"]);
     return this;
   }
 
@@ -474,7 +484,7 @@ export class Command {
    */
   public has(name: string) {
     name = Option.trim(name);
-    if (isNull(name)) return false;
+    if (isNullOrUndefined(name)) return false;
     return this.params.hasOwnProperty(name);
   }
 
