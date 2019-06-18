@@ -1,7 +1,7 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "cmdline is a process.argv parser",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -10,7 +10,8 @@
     "lint": "tslint --project ./tsconfig.json --fix",
     "build": "npm run clean && npm run lint && tsc && npm run copy",
     "copy": "copyfiles --up 1 ./src/**/*.txt ./dist/",
-    "dev": "tsnd ./src/index.ts"
+    "dev": "tsnd ./src/index.ts",
+    "pu": "npm pu --registry=http://registry.npmjs.org"
   },
   "keywords": [
     "cmdline",

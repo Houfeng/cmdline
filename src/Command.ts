@@ -252,7 +252,7 @@ export class Command {
         return "-" + char;
       });
       const allExsits = !shortOptionNames.some(name => {
-        return !this.options.get(name);
+        return !this.optionList.get(name);
       });
       if (!allExsits) return;
       // 将分解后的短参插入
