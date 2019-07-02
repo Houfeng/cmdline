@@ -3,3 +3,5 @@ node_modules/
 .vscode/
 *.log
 .DS_Store
+tsconfig.json
+tslint.json

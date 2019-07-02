@@ -1,7 +1,7 @@
 {
   "name": "cmdline",
   "rawName": "cmdline",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "cmdline is a process.argv parser",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
