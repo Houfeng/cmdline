@@ -54,11 +54,11 @@ export class Command {
   /**
    * 控制台实例
    */
-  public consoleInstance: any;
+  public logger: any;
 
-  private errorHandler: ActionHandler;
-  private helpHandler: ActionHandler;
-  private versionHandler: ActionHandler;
+  public errorHandler: ActionHandler;
+  public helpHandler: ActionHandler;
+  public versionHandler: ActionHandler;
 
   private tokenList: TokenList;
   private originArgv: string[];
@@ -74,14 +74,23 @@ export class Command {
   public argv: string[];
 
   /**
-   * 当前命令参数个数
-   */
-  public argc: number;
-
-  /**
    * 当前选项 kev/value
    */
   public options: any;
+
+  /**
+   * 当前命令参数个数
+   */
+  public get argc() {
+    return this.argv.length;
+  }
+
+  /**
+   * 当前选项个数
+   */
+  public get optionsCount() {
+    return Object.keys(this.options).length;
+  }
 
   /**
    * 当前命令所有参数（argv & options & others）
@@ -100,10 +109,9 @@ export class Command {
     this.commandList = new CommandList();
     this.actionList = new ActionList();
     this.argumentList = new ArgumentList();
-    this.consoleInstance = this.parent.consoleInstance || console;
+    this.logger = this.parent.logger || console;
     this.errorHandler = this.parent.errorHandler;
     this.params = {};
-    this.argc = 0;
     this.options = {};
     this.argv = [];
   }
@@ -129,9 +137,10 @@ export class Command {
    * @param handler 处理函数
    * - ActionHandler 的参数为 options 或 argv，执行时值将自动注入
    * @param required 匹配参数，如果指定必须满足才会执行 handler
-   * - 传入 false：不要求匹配任何参数，当前命令无论任何 options 或 argv 都将执行
-   * - 传入 Array：要求匹配 Array 指定的参数，只有匹配到了才执行
-   * - 省略：将自动要求按 ActionHandler 的参数进行匹配
+   * - "*": 匹配任意参数，无论任何 options 或 argv 都将执行
+   * - Array: 要求匹配 Array 指定的参数，只有数组中指定的参数存在才执行
+   * - false: 强制不匹配任何参数，只有没有任何参数时才执行
+   * - 省略: 将自动分析 ActionHandler 的参数，只有参数都在存时才执行
    * @returns
    * 如果返回 false ，将会阻止后续其他匹配的 ActionHandler 执行
    */
@@ -175,10 +184,10 @@ export class Command {
   }
 
   /**
-   * 配置控制台
+   * 配置控制台实例
    */
-  public console(console: any) {
-    this.consoleInstance = console || this.consoleInstance;
+  public console(logger: any) {
+    this.logger = logger || this.logger;
     return this;
   }
 
@@ -341,8 +350,6 @@ export class Command {
         this.argv.push(token.value);
       }
     }
-    // 得到参数个数 argc
-    this.argc = this.argv.length;
   }
 
   /**
@@ -406,18 +413,23 @@ export class Command {
    */
   private _findActions() {
     const foundActions = this.actionList.filter(action => {
-      let requiredParams: string[] = null;
-      if (action.requiredParams === false) {
-        // 没有任何必选参数
-        requiredParams = [];
+      let required: string[] | boolean | string;
+      if (action.requiredParams === "*") {
+        // 匹配任意参数
+        required = "*";
+      } else if (action.requiredParams === false) {
+        // 强制不匹配任何参数
+        required = false;
       } else if (isArray(action.requiredParams)) {
         // 通过数组指定的必选参数
-        requiredParams = action.requiredParams;
+        required = action.requiredParams;
       } else {
         // 自动分析必选参数
-        requiredParams = getFunctionArgumentNames(action.handler);
+        required = getFunctionArgumentNames(action.handler);
       }
-      return !requiredParams.some((name: string) => {
+      if (required === "*") return true;
+      if (required === false) return this.argc < 1 && this.optionsCount < 1;
+      return !(<string[]>required).some((name: string) => {
         return !this.has(name);
       });
     });
@@ -452,7 +464,7 @@ export class Command {
     this.versionHandler = isString(version)
       ? () => {
           const content = this._strOrFile(version);
-          this.consoleInstance.log(content || "unknow");
+          console.log(content || "unknow");
           return false;
         }
       : version;
@@ -468,7 +480,7 @@ export class Command {
     this.helpHandler = isString(help)
       ? () => {
           const content = this._strOrFile(help);
-          this.consoleInstance.log(content || "unknow");
+          console.log(content || "unknow");
           return false;
         }
       : help;
