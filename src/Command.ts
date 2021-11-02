@@ -1,16 +1,21 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Action, ActionHandler, ActionList, ActionRequried } from "./Action";
+import { Action, ActionHandler, ActionList, ActionRequired } from "./Action";
 import { Argument, ArgumentList } from "./Argument";
-import { isArray, isString, isNullOrUndefined } from "util";
 import { Option, OptionList } from "./Option";
 import { Token, TokenList } from "./Token";
 import { Type } from "./Type";
-
-const { each, unique, getFunctionArgumentNames } = require("ntils");
+import {
+  each,
+  getFunctionArgumentNames,
+  isArray,
+  isString,
+  isNull
+} from "ntils";
 
 // 常量
 const COMMAND_REGEXP = /^[a-z0-9]+/i;
+const unique = (arr: any[]) => Array.from(new Set(arr));
 
 /**
  * 定义命令行参数解析器
@@ -144,7 +149,7 @@ export class Command {
    * @returns
    * 如果返回 false ，将会阻止后续其他匹配的 ActionHandler 执行
    */
-  public action(handler: ActionHandler, required?: ActionRequried) {
+  public action(handler: ActionHandler, required?: ActionRequired) {
     this.actionList.push(new Action(handler, required));
     return this;
   }
@@ -223,7 +228,8 @@ export class Command {
       ],
       (i: number, fn: Function) => {
         return fn.call(this);
-      }
+      },
+      this
     );
     // 检查预处理并执行下一步
     if (firstError) return this.emitError(firstError);
@@ -255,15 +261,15 @@ export class Command {
     this.tokenList.forEach((token, index) => {
       if (token.type !== Token.TYPE_OPTION_NAME) return; // 如果不是 option
       if (this.optionList.get(token.value)) return; // 如果是一个明确存在的 option
-      const trimedName = Option.trim(token.value);
-      if (trimedName.length < 2 || this._hasRepeatChar(trimedName)) return;
-      const shortOptionNames = trimedName.split("").map(char => {
+      const trimmedName = Option.trim(token.value);
+      if (trimmedName.length < 2 || this._hasRepeatChar(trimmedName)) return;
+      const shortOptionNames = trimmedName.split("").map(char => {
         return "-" + char;
       });
-      const allExsits = !shortOptionNames.some(name => {
+      const allExists = !shortOptionNames.some(name => {
         return !this.optionList.get(name);
       });
-      if (!allExsits) return;
+      if (!allExists) return;
       // 将分解后的短参插入
       this.tokenList.splice(
         index,
@@ -281,7 +287,7 @@ export class Command {
   private _parseCommand() {
     let subCommendName = this.originArgv[1];
     if (
-      isNullOrUndefined(subCommendName) ||
+      isNull(subCommendName) ||
       this.commandList.length < 1 ||
       Option.test(subCommendName)
     ) {
@@ -301,7 +307,7 @@ export class Command {
    * 是否包含重复字符
    */
   private _hasRepeatChar(str: string) {
-    if (isNullOrUndefined(str)) return false;
+    if (isNull(str)) return false;
     let array = str.split("");
     return unique(array).length !== array.length;
   }
@@ -321,13 +327,13 @@ export class Command {
         // 如果是一个 options
         const option = this.optionList.get(token.value);
         // 如果「选项」不存在，或限定的 command 不匹配，添加到 errArray
-        if (isNullOrUndefined(option)) {
+        if (isNull(option)) {
           return new Error("Invalid option: " + token.value);
         }
         // 如果存在，则检查后边紧临的 token 是否符合「正则」这义的规则
         const nextToken = this.tokenList[++index];
         if (
-          isNullOrUndefined(nextToken) ||
+          isNull(nextToken) ||
           (nextToken.type === Token.TYPE_OPTION_NAME && !option.type.greed) ||
           !option.testValue(nextToken.value)
         ) {
@@ -357,14 +363,18 @@ export class Command {
    */
   private _covertOptions() {
     const options: any = {};
-    each(this.options, (eachName: string, eachValue: any) => {
-      const optionName = Option.trim(eachName);
-      options[optionName] = eachValue;
-      this.optionList.get(eachName).names.forEach((eachAlias: string) => {
-        const alias = Option.trim(eachAlias);
-        options[alias] = eachValue;
-      });
-    });
+    each(
+      this.options,
+      (eachName: string, eachValue: any) => {
+        const optionName = Option.trim(eachName);
+        options[optionName] = eachValue;
+        this.optionList.get(eachName).names.forEach((eachAlias: string) => {
+          const alias = Option.trim(eachAlias);
+          options[alias] = eachValue;
+        });
+      },
+      this
+    );
     this.options = options;
   }
 
@@ -378,12 +388,20 @@ export class Command {
     params.self = params.$self = params.$this = this;
     params.argv = params.$argv = this.argv;
     params.argc = params.$argc = this.argc;
-    each(this.argv, (index: number, value: any) => {
-      params["$" + (index + 1)] = value;
-    });
-    each(this.options, (name: string, value: any) => {
-      params[name] = value;
-    });
+    each(
+      this.argv,
+      (index: number, value: any) => {
+        params["$" + (index + 1)] = value;
+      },
+      this
+    );
+    each(
+      this.options,
+      (name: string, value: any) => {
+        params[name] = value;
+      },
+      this
+    );
     this.params = params;
   }
 
@@ -448,7 +466,7 @@ export class Command {
    * 字符串或文件内容
    */
   private _strOrFile(str: string) {
-    if (isNullOrUndefined(str)) return str;
+    if (isNull(str)) return str;
     if (str[0] !== "@") return str;
     try {
       return fs.readFileSync(str.substr(1), "utf8");
@@ -494,7 +512,7 @@ export class Command {
    */
   public has(name: string) {
     name = Option.trim(name);
-    if (isNullOrUndefined(name)) return false;
+    if (isNull(name)) return false;
     return this.params.hasOwnProperty(name);
   }
 

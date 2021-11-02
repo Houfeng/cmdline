@@ -13,6 +13,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "maxNodeModuleJsDepth": 4,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "pretty": true,
     "lib": [
       "esnext"

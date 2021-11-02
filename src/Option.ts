@@ -1,5 +1,5 @@
 import { Type, builtInTypes } from "./Type";
-import { isString, isArray } from "util";
+import { isArray, isString } from "ntils";
 
 const OPTION_REGEXP = /^\-+([\s\S]*)/i;
 

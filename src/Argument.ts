@@ -1,5 +1,6 @@
 import { Type, builtInTypes } from "./Type";
-import { isString } from "util";
+
+import { isString } from "ntils";
 
 /**
  * 参数对象

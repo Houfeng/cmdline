@@ -9,7 +9,7 @@ export type ActionHandler = (
 /**
  * Action 依赖的参数
  */
-export type ActionRequried = string[] | string | boolean;
+export type ActionRequired = string[] | string | boolean;
 
 /**
  * 动作定义
@@ -17,7 +17,7 @@ export type ActionRequried = string[] | string | boolean;
 export class Action {
   constructor(
     public handler: ActionHandler,
-    public requiredParams: ActionRequried
+    public requiredParams: ActionRequired
   ) {
     this.handler = handler;
     this.requiredParams = requiredParams;
